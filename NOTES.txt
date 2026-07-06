@@ -1,0 +1,4 @@
+CampusHub - Proje Başlangıç Notları
+
+BE-001: Temel Spring Boot projesi başarıyla oluşturuldu
+Bağımlılıklar (Web, Security, PostgreSQL, Lombok, Data JPA, MapStruct) eklendi
