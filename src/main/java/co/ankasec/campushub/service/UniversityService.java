@@ -16,9 +16,6 @@ public class UniversityService {
 
     private final UniversityRepository universityRepository;
 
-
-
-
     public List<UniversityResponseDTO> getAllUniversities() {
         return universityRepository.findAll()
                 .stream()
@@ -34,7 +31,6 @@ public class UniversityService {
     }
 
     public UniversityResponseDTO createUniversity(UniversityRequestDTO requestDTO) {
-
         University university = University.builder()
                 .name(requestDTO.getName())
                 .logoUrl(requestDTO.getLogoUrl())
@@ -46,22 +42,13 @@ public class UniversityService {
         return convertToResponseDTO(savedUniversity);
     }
 
-
-    private UniversityResponseDTO  convertToResponseDTO(University university) {
-
+    private UniversityResponseDTO convertToResponseDTO(University university) {
         return UniversityResponseDTO.builder()
                 .id(university.getId())
                 .name(university.getName())
                 .logoUrl(university.getLogoUrl())
                 .domain(university.getDomain())
                 .build();
-
-
     }
-
-
-
-
-
 
 }

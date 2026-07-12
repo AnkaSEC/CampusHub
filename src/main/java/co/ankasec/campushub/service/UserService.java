@@ -4,20 +4,18 @@ import co.ankasec.campushub.model.dto.UserRequestDTO;
 import co.ankasec.campushub.model.dto.UserResponseDTO;
 import co.ankasec.campushub.model.entity.User;
 import co.ankasec.campushub.repository.UserRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
+@RequiredArgsConstructor
 public class UserService {
 
     private final UserRepository userRepository;
-
-    public UserService(UserRepository userRepository) {
-        this.userRepository = userRepository;
-    }
-
 
     public List<UserResponseDTO> getAllUsers() {
         return userRepository.findAll().stream()
@@ -25,13 +23,11 @@ public class UserService {
                 .collect(Collectors.toList());
     }
 
-
     public UserResponseDTO getUserById(UUID id) {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Kullanıcı bulunamadı!"));
         return convertToResponseDTO(user);
     }
-
 
     public UserResponseDTO updateUser(UUID id, UserRequestDTO requestDTO) {
         User user = userRepository.findById(id)
@@ -44,7 +40,6 @@ public class UserService {
             user.setPasswordHash(requestDTO.getPassword());
         }
 
-
         if (requestDTO.getPassword() != null)
             user.setPasswordHash(requestDTO.getPassword());
         if (requestDTO.getName() != null)
@@ -56,11 +51,9 @@ public class UserService {
         if (requestDTO.getUniversity() != null)
             user.setUniversity(requestDTO.getUniversity());
 
-
         User updatedUser = userRepository.save(user);
         return convertToResponseDTO(updatedUser);
     }
-
 
     private UserResponseDTO convertToResponseDTO(User user) {
         return UserResponseDTO.builder()

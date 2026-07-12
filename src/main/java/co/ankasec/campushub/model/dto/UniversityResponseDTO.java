@@ -10,12 +10,8 @@ import java.util.UUID;
 @AllArgsConstructor
 @Builder
 public class UniversityResponseDTO {
-
     private UUID id;
-
     private String name;
-
     private String logoUrl;
-
     private String domain;
 }

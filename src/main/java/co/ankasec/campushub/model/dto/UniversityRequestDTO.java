@@ -8,10 +8,7 @@ import lombok.*;
 @AllArgsConstructor
 @Builder
 public class UniversityRequestDTO {
-
     private String name;
-
     private String logoUrl;
-
     private String domain;
 }

@@ -1,6 +1,5 @@
 package co.ankasec.campushub.model.entity;
 
-
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -13,14 +12,10 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-
-
-
 public class University {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-
     private UUID id;
 
     @Column(nullable = false, unique = true)

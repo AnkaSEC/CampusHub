@@ -18,25 +18,18 @@ public class UniversityController {
     private final UniversityService universityService;
 
     @GetMapping
-    public ResponseEntity<List<UniversityResponseDTO>>  getAllUniversities() {
-
-        var result = ResponseEntity.ok(universityService.getAllUniversities());
-        return    result;
+    public ResponseEntity<List<UniversityResponseDTO>> getAllUniversities() {
+        return ResponseEntity.ok(universityService.getAllUniversities());
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<UniversityResponseDTO> getUniversityById(@PathVariable UUID id) {
-        var result = ResponseEntity.ok(universityService.getUniversityById(id));
-        return result;
+        return ResponseEntity.ok(universityService.getUniversityById(id));
     }
-
 
     @PostMapping
     public ResponseEntity<UniversityResponseDTO> createUniversity(@RequestBody UniversityRequestDTO requestDTO) {
-
-       var result = ResponseEntity.ok(universityService.createUniversity(requestDTO));
-
-       return result;
+        return ResponseEntity.ok(universityService.createUniversity(requestDTO));
     }
 
 }
