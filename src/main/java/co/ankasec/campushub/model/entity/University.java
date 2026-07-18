@@ -3,6 +3,8 @@ package co.ankasec.campushub.model.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 @Entity
@@ -26,6 +28,9 @@ public class University {
 
     @Column(nullable = false, unique = true)
     private String domain;
+
+    @OneToMany(cascade = CascadeType.ALL)
+    private List<Club> clubs = new ArrayList<>();
 }
 
 
