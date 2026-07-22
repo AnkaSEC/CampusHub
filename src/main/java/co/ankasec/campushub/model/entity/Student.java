@@ -11,7 +11,7 @@ import java.util.List;
 @Data
 @EqualsAndHashCode(callSuper = true)
 @DiscriminatorValue("STUDENT")
-@Inheritance(strategy = InheritanceType.JOINED)
+
 public class Student extends User {
 
     @Column(nullable = false)
