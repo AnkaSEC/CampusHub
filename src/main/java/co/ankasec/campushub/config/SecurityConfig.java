@@ -28,8 +28,8 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(
                                 "/api/v1/auth/**",
-                                "/view/verifications/**",   // Thymeleaf HTML sayfamız için izin
-                                "/api/v1/verifications/**"  // PDF yükleme API'si için izin
+                                "/view/verifications/**",
+                                "/api/v1/verifications/**"
                         ).permitAll()
                         .anyRequest().authenticated()
                 )
