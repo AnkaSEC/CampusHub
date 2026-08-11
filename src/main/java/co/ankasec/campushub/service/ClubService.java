@@ -20,7 +20,12 @@ public class ClubService {
     private final UniversityRepository universityRepository;
 
     public List<ClubResponseDTO> getAllClubs() {
-        return clubRepository.findAll()
+        return searchClubs(null, null);
+    }
+
+    public List<ClubResponseDTO> searchClubs(String q, UUID universityId) {
+        String searchTerm = (q == null || q.isBlank()) ? null : q.trim();
+        return clubRepository.search(searchTerm, universityId)
                 .stream()
                 .map(this::convertToResponseDTO)
                 .toList();

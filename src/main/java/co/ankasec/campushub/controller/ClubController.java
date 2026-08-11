@@ -18,8 +18,10 @@ public class ClubController {
     private final ClubService clubService;
 
     @GetMapping
-    public ResponseEntity<List<ClubResponseDTO>> getAllClubs() {
-        return ResponseEntity.ok(clubService.getAllClubs());
+    public ResponseEntity<List<ClubResponseDTO>> getClubs(
+            @RequestParam(required = false) String q,
+            @RequestParam(required = false) UUID universityId) {
+        return ResponseEntity.ok(clubService.searchClubs(q, universityId));
     }
 
     @GetMapping("/{id}")
