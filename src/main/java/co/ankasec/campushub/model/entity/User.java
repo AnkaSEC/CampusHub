@@ -47,7 +47,7 @@ public class User {
 
     @Builder.Default
     @Column(name = "is_active", nullable = false)
-    private boolean isActive = true;
+    private boolean isActive = false;
 
     @CreationTimestamp
     @Column(name = "created_at", updatable = false)
