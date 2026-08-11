@@ -1,5 +1,6 @@
 package co.ankasec.campushub.controller;
 
+import co.ankasec.campushub.model.dto.ClubMemberResponseDTO;
 import co.ankasec.campushub.model.dto.ClubRequestDTO;
 import co.ankasec.campushub.model.dto.ClubResponseDTO;
 import co.ankasec.campushub.service.ClubService;
@@ -27,6 +28,11 @@ public class ClubController {
     @GetMapping("/{id}")
     public ResponseEntity<ClubResponseDTO> getClubById(@PathVariable UUID id) {
         return ResponseEntity.ok(clubService.getClubById(id));
+    }
+
+    @GetMapping("/{id}/members")
+    public ResponseEntity<List<ClubMemberResponseDTO>> getClubMembers(@PathVariable UUID id) {
+        return ResponseEntity.ok(clubService.getClubMembers(id));
     }
 
     @PostMapping

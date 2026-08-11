@@ -1,9 +1,13 @@
 package co.ankasec.campushub.service;
 
+import co.ankasec.campushub.model.dto.ClubMemberResponseDTO;
 import co.ankasec.campushub.model.dto.ClubRequestDTO;
 import co.ankasec.campushub.model.dto.ClubResponseDTO;
 import co.ankasec.campushub.model.entity.Club;
+import co.ankasec.campushub.model.entity.ClubMembership;
+import co.ankasec.campushub.model.entity.Student;
 import co.ankasec.campushub.model.entity.University;
+import co.ankasec.campushub.repository.ClubMembershipRepository;
 import co.ankasec.campushub.repository.ClubRepository;
 import co.ankasec.campushub.repository.UniversityRepository;
 import lombok.RequiredArgsConstructor;
@@ -18,6 +22,7 @@ public class ClubService {
 
     private final ClubRepository clubRepository;
     private final UniversityRepository universityRepository;
+    private final ClubMembershipRepository clubMembershipRepository;
 
     public List<ClubResponseDTO> getAllClubs() {
         return searchClubs(null, null);
@@ -78,6 +83,32 @@ public class ClubService {
             throw new RuntimeException("Kulüp bulunamadı");
         }
         clubRepository.deleteById(id);
+    }
+
+    public List<ClubMemberResponseDTO> getClubMembers(UUID clubId) {
+        if (!clubRepository.existsById(clubId)) {
+            throw new RuntimeException("Kulüp bulunamadı");
+        }
+
+        return clubMembershipRepository.findByClubId(clubId)
+                .stream()
+                .map(this::convertToMemberResponseDTO)
+                .toList();
+    }
+
+    private ClubMemberResponseDTO convertToMemberResponseDTO(ClubMembership membership) {
+        Student student = membership.getStudent();
+        return ClubMemberResponseDTO.builder()
+                .membershipId(membership.getId())
+                .studentId(student != null ? student.getId() : null)
+                .username(student != null ? student.getUsername() : null)
+                .name(student != null ? student.getName() : null)
+                .photoUrl(student != null ? student.getPhotoUrl() : null)
+                .department(student != null ? student.getDepartment() : null)
+                .studentNumber(student != null ? student.getStudentNumber() : null)
+                .role(membership.getRole())
+                .joinedAt(membership.getJoinedAt())
+                .build();
     }
 
     private ClubResponseDTO convertToResponseDTO(Club club) {
