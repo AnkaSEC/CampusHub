@@ -5,6 +5,7 @@ import co.ankasec.campushub.model.dto.UserResponseDTO;
 import co.ankasec.campushub.model.entity.User;
 import co.ankasec.campushub.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -16,6 +17,7 @@ import java.util.stream.Collectors;
 public class UserService {
 
     private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
 
     public List<UserResponseDTO> getAllUsers() {
         return userRepository.findAll().stream()
@@ -33,15 +35,13 @@ public class UserService {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Kullanıcı bulunamadı!"));
 
-        if (requestDTO.getPassword() != null) {
+        if (requestDTO.getPassword() != null && !requestDTO.getPassword().isBlank()) {
             if (requestDTO.getPassword().length() < 8) {
                 throw new IllegalArgumentException("Şifre en az 8 karakter olmalıdır!");
             }
-            user.setPasswordHash(requestDTO.getPassword());
+            user.setPasswordHash(passwordEncoder.encode(requestDTO.getPassword()));
         }
 
-        if (requestDTO.getPassword() != null)
-            user.setPasswordHash(requestDTO.getPassword());
         if (requestDTO.getName() != null)
             user.setName(requestDTO.getName());
         if (requestDTO.getBio() != null)

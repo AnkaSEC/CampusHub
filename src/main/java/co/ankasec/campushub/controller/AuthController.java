@@ -1,9 +1,11 @@
 package co.ankasec.campushub.controller;
 
+import co.ankasec.campushub.model.dto.AuthResponseDTO;
+import co.ankasec.campushub.model.dto.LoginRequestDTO;
+import co.ankasec.campushub.model.dto.RefreshTokenRequestDTO;
 import co.ankasec.campushub.model.dto.SignupRequestDTO;
 import co.ankasec.campushub.service.AuthService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,12 +18,21 @@ public class AuthController {
 
     @PostMapping("/register")
     public ResponseEntity<String> register(@RequestBody SignupRequestDTO request) {
-        String response = authService.register(request);
-        return new ResponseEntity<>(response, HttpStatus.CREATED);
+        return ResponseEntity.ok(authService.register(request));
     }
 
     @PostMapping("/login")
-    public ResponseEntity<String> login() {
-        return ResponseEntity.ok("Giriş işlemi başarılı");
+    public ResponseEntity<AuthResponseDTO> login(@RequestBody LoginRequestDTO request) {
+        return ResponseEntity.ok(authService.login(request));
+    }
+
+    @PostMapping("/refresh-token")
+    public ResponseEntity<AuthResponseDTO> refreshToken(@RequestBody RefreshTokenRequestDTO request) {
+        return ResponseEntity.ok(authService.refreshToken(request));
+    }
+
+    @PostMapping("/logout")
+    public ResponseEntity<String> logout() {
+        return ResponseEntity.ok(authService.logout());
     }
 }

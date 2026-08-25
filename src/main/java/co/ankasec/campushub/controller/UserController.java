@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/api/users")
+@RequestMapping("/api/v1/users")
 @RequiredArgsConstructor
 public class UserController {
 
@@ -22,12 +22,10 @@ public class UserController {
         return ResponseEntity.ok(userService.getAllUsers());
     }
 
-
     @GetMapping("/{id}")
     public ResponseEntity<UserResponseDTO> getUserById(@PathVariable UUID id) {
         return ResponseEntity.ok(userService.getUserById(id));
     }
-
 
     @PatchMapping("/{id}")
     public ResponseEntity<UserResponseDTO> updateUser(@PathVariable UUID id,
