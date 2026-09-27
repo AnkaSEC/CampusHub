@@ -7,12 +7,16 @@ import co.ankasec.campushub.model.entity.Club;
 import co.ankasec.campushub.model.entity.ClubMembership;
 import co.ankasec.campushub.model.entity.Student;
 import co.ankasec.campushub.model.entity.University;
+import co.ankasec.campushub.model.entity.User;
 import co.ankasec.campushub.repository.ClubMembershipRepository;
 import co.ankasec.campushub.repository.ClubRepository;
 import co.ankasec.campushub.repository.UniversityRepository;
+import co.ankasec.campushub.repository.UserRepository;
+import co.ankasec.campushub.model.enums.MembershipRole;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -23,12 +27,13 @@ public class ClubService {
     private final ClubRepository clubRepository;
     private final UniversityRepository universityRepository;
     private final ClubMembershipRepository clubMembershipRepository;
+    private final UserRepository userRepository;
 
-    public List<ClubResponseDTO> getAllClubs() {
+    public List getAllClubs() {
         return searchClubs(null, null);
     }
 
-    public List<ClubResponseDTO> searchClubs(String q, UUID universityId) {
+    public List searchClubs(String q, UUID universityId) {
         String searchTerm = (q == null || q.isBlank()) ? null : q.trim();
         return clubRepository.search(searchTerm, universityId)
                 .stream()
@@ -85,7 +90,7 @@ public class ClubService {
         clubRepository.deleteById(id);
     }
 
-    public List<ClubMemberResponseDTO> getClubMembers(UUID clubId) {
+    public List getClubMembers(UUID clubId) {
         if (!clubRepository.existsById(clubId)) {
             throw new RuntimeException("Kulüp bulunamadı");
         }
@@ -94,6 +99,41 @@ public class ClubService {
                 .stream()
                 .map(this::convertToMemberResponseDTO)
                 .toList();
+    }
+
+    public String followClub(UUID clubId, UUID userId) {
+        if (clubMembershipRepository.existsByClubIdAndStudentId(clubId, userId)) {
+            throw new RuntimeException("Bu kulübü zaten takip ediyorsunuz!");
+        }
+
+        Club club = clubRepository.findById(clubId)
+                .orElseThrow(() -> new RuntimeException("Kulüp bulunamadı"));
+
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("Kullanıcı bulunamadı"));
+
+        Student student = null;
+        if (user instanceof Student s) {
+            student = s;
+        }
+
+        ClubMembership membership = ClubMembership.builder()
+                .club(club)
+                .student(student)
+                .role(MembershipRole.MEMBER)
+                .joinedAt(LocalDateTime.now())
+                .build();
+
+        clubMembershipRepository.save(membership);
+        return "Kulüp başarıyla takip edildi.";
+    }
+
+    public String unfollowClub(UUID clubId, UUID userId) {
+        ClubMembership membership = clubMembershipRepository.findByClubIdAndStudentId(clubId, userId)
+                .orElseThrow(() -> new RuntimeException("Takip kaydı bulunamadı"));
+
+        clubMembershipRepository.delete(membership);
+        return "Kulüp takipten çıkarıldı.";
     }
 
     private ClubMemberResponseDTO convertToMemberResponseDTO(ClubMembership membership) {

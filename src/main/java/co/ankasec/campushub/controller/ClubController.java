@@ -51,4 +51,14 @@ public class ClubController {
         clubService.deleteClub(id);
         return ResponseEntity.noContent().build();
     }
+
+    @PostMapping("/{id}/follow")
+    public ResponseEntity followClub(@PathVariable UUID id, @RequestParam UUID userId) {
+        return ResponseEntity.ok(clubService.followClub(id, userId));
+    }
+
+    @DeleteMapping("/{id}/follow")
+    public ResponseEntity unfollowClub(@PathVariable UUID id, @RequestParam UUID userId) {
+        return ResponseEntity.ok(clubService.unfollowClub(id, userId));
+    }
 }
