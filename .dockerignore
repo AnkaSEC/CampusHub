@@ -1,0 +1,17 @@
+.git
+.idea
+.vscode
+target
+**/target
+*.iml
+*.iws
+*.ipr
+HELP.md
+Notes.txt
+.env
+.env.*
+!.env.example
+src/main/resources/serviceAccountKey.json
+**/serviceAccountKey.json
+.cursor
+agent-transcripts

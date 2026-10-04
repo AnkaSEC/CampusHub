@@ -4,20 +4,31 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+import java.nio.charset.StandardCharsets;
 import java.security.Key;
 import java.util.Date;
 
 @Component
 public class JwtUtils {
 
-    private static final String SECRET_KEY = "campushub_secret_key_campushub_secret_key_123456";
     private static final long ACCESS_TOKEN_EXPIRATION = 86400000;
     private static final long REFRESH_TOKEN_EXPIRATION = 604800000;
 
+    private final Key signingKey;
+
+    public JwtUtils(@Value("${app.jwt.secret}") String secret) {
+        byte[] keyBytes = secret.getBytes(StandardCharsets.UTF_8);
+        if (keyBytes.length < 32) {
+            throw new IllegalStateException("JWT_SECRET en az 32 karakter olmalıdır");
+        }
+        this.signingKey = Keys.hmacShaKeyFor(keyBytes);
+    }
+
     private Key getSigningKey() {
-        return Keys.hmacShaKeyFor(SECRET_KEY.getBytes());
+        return signingKey;
     }
 
     public String generateAccessToken(String email) {

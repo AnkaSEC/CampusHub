@@ -1,0 +1,23 @@
+# Vercel Fluid compute — Spring Boot API
+# App must listen on $PORT (default 80)
+
+FROM maven:3.9.9-eclipse-temurin-21-alpine AS build
+WORKDIR /src
+
+COPY pom.xml .
+COPY src src
+RUN mvn -q -B -DskipTests package \
+    && cp target/*.jar /app.jar
+
+FROM eclipse-temurin:21-jre-alpine
+WORKDIR /app
+
+RUN addgroup -S app && adduser -S app -G app
+USER app
+
+COPY --from=build /app.jar /app/app.jar
+
+ENV PORT=80
+EXPOSE 80
+
+CMD ["sh", "-c", "java -XX:+UseContainerSupport -XX:MaxRAMPercentage=75.0 -Dserver.port=${PORT:-80} -jar /app/app.jar"]
