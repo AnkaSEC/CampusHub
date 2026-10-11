@@ -6,12 +6,14 @@ spring:
     name: campushub
 
   datasource:
-    url: ${DB_URL:jdbc:postgresql://aws-1-eu-central-1.pooler.supabase.com:5432/postgres?sslmode=require}
-    username: ${DB_USERNAME:postgres.lzliqcvigymrgdrqeeqb}
-    password: ${DB_PASSWORD:1DwmMlzLQeUv9hZg}
+    url: ${DB_URL:jdbc:postgresql://localhost:5432/campushub_db}
+    username: ${DB_USERNAME:postgres}
+    password: ${DB_PASSWORD:postgres}
     driver-class-name: org.postgresql.Driver
     hikari:
       maximum-pool-size: ${DB_POOL_SIZE:5}
+      connection-timeout: 30000
+      initialization-fail-timeout: 60000
 
   jpa:
     hibernate:
